@@ -59,9 +59,9 @@ public class datacontroller {
 
    }
     //*********************************************************************************************
-   @PostMapping(value = {"/post_avn/{numaff1}/{cin}","/post_avn"})
-   public void WS_aneti(@PathVariable(required = false)String numaff1,@PathVariable(required = false)String cin)
-           throws ParseException {
+   @PostMapping(value = {"/post_avn/{numaff1}/{cin}/{typavg}","/post_avn"})
+   public void WS_aneti(@PathVariable(required = false)String numaff1,@PathVariable(required = false)String cin,@PathVariable(required = false)String typavg)
+           {
 
        ArrayList<data_karama> emp = new ArrayList<>();
        ArrayList<data_karama> ass = new ArrayList<>();
@@ -88,9 +88,11 @@ public class datacontroller {
 
           List<data_karama> list = repository4.findAll();
            list.forEach((data)->{
+            aneti_avg data2= repository8.codavn(data.getType_contrat());
+            String codavg=  data2.getCode();
 
-             if (data.getEmp_exist()==null )
-            {
+            // if (data.getEmp_exist()==null )
+           // {
              String v1 = data.getNumero_affiliation();
 
              /////--------------------------SAME SAME SAME SAME SAME--------------------------
@@ -102,7 +104,7 @@ public class datacontroller {
              long numaf = Long.parseLong(v11);
              long numcle = Long.parseLong(v12);
              // check iff employer has a record in "dossieravantage"
-             h.set(repository2.countt(numaf,numcle));
+             h.set(repository2.countt(numaf,numcle,codavg));
           //CREATION DOSSIEER AVANTAGE PAR EMPLOYEUR---------------------------
 
              if (h.get() == 0)
@@ -145,7 +147,7 @@ public class datacontroller {
                      //long k7 = Long.valueOf(k6).longValue();
                      long k7 = Long.parseLong(k6);
                      davn.setDoa_refdoss(k7);
-                     aneti_avg data2= repository8.codavn(data.getType_contrat());
+                     //aneti_avg data2= repository8.codavn(data.getType_contrat());
                      davn.setAvn_codav(data2.getAvn_codav());
                      //davn.setAvn_codav("20190542CK");
                      //davn.setDoa_dtedep(sysdate);
@@ -189,10 +191,8 @@ public class datacontroller {
            { if ( repository5.search_ben(data.getCin()).get(0).isPresent() && repository3.brcod(numaf).isPresent())
            {
 
-
                    long brcod = repository3.brcod(numaf).get();
                    data.setAss_exist(1L);
-
                    data.setBur_cod(brcod);
                   beneficiaire ben = repository5.search_ben(data.getCin()).get(0).get();
                  long v= repository6.search_dossavgass(ben.getAss_mat());
@@ -236,7 +236,8 @@ public class datacontroller {
                    }
              //-----------------------------------------------------------------
             }
-           }}
+           }
+           //}
          );
          }
 
@@ -248,9 +249,12 @@ public class datacontroller {
                String v12= numaff1.substring(6);
                long numaf = Long.parseLong(v11);
                long numcle = Long.parseLong(v12);
-               h.set(repository2.countt(numaf,numcle));
+               aneti_avg data2= repository8.codavn(typavg);
+               String codavg=  data2.getCode();
+               h.set(repository2.countt(numaf,numcle,codavg));
                //CREATION DOSSIEER AVANTAGE PAR EMPLOYEUR---------------------------
-               data_karama data = repository4.findbynumaff(numaff1,cin);
+
+               data_karama data = repository4.findbynumaff(numaff1,cin,typavg);
                if (h.get() == 0)
                {
                    boolean boo = repository3.brcod(numaf).isPresent();
@@ -294,8 +298,8 @@ public class datacontroller {
                        long k7 = Long.parseLong(k6);
                        davn.setDoa_refdoss(k7);
                        //davn.setAvn_codav("20190542CK");
-                       aneti_avg data2= repository8.codavn(data.getType_contrat());
-                       davn.setAvn_codav(data2.getAvn_codav());
+                      // aneti_avg data2= repository8.codavn(data.getType_contrat());
+                       davn.setAvn_codav(typavg);
 
                        //davn.setDoa_dtedep(sysdate);
                        davn.setDoa_dtedep(date);
@@ -400,27 +404,26 @@ public class datacontroller {
    //*********************************************************************************************
    @GetMapping("/get")
     public List<data_karama> get_angular(){
-       List<data_karama> list = repository4.findAll();
-       return list;
+
+       return   repository4.findAll();
    }
 
    @GetMapping("/getbrcod")
    public List<bureau> get_bur()
    {
-       List<bureau> list = repository7.findAll();
-       return list;
+
+       return   repository7.findAll();
    }
    @GetMapping("/getavn")
    public List<aneti_avg> getavgcod(){
-      List<aneti_avg> list= repository8.findAll();
-       return list;
+
+       return   repository8.findAll();
    }
 
    @GetMapping("/gethistorique")
    public List<ws_aneti_historique> gethisto(){
-       List<ws_aneti_historique> list=repository9.findAllByOrderByIdAsc();
 
-       return list;
+       return  repository9.findAllByOrderByIdAsc();
    }
    //*****************************************************
    @GetMapping(value={  "/get/{burcod}", "/get/{burcod}/{cin}/{numero_affiliation}"})
@@ -469,7 +472,7 @@ public class datacontroller {
        String g = String.valueOf(t.getBody());
        //System.out.println(g);
        System.out.println(g.substring(5));
-       JsonNode root = mapper.readTree(String.valueOf(g.substring(5)));
+       JsonNode root = mapper.readTree(g.substring(5));
        //JsonNode root = mapper.readTree(g);
        //////String result = root.path("result").textValue();
        //long numberColumns = root.path("numberColumns").longValue();

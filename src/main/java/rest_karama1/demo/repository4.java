@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface repository4 extends JpaRepository<data_karama, Serializable> {
-    @Query(value = "select distinct j from data_karama j where j.numero_affiliation =:numaf and j.cin =:cin")
-    data_karama findbynumaff(@Param("numaf") String numaf, @Param("cin") String cin);
+    @Query(value = "select distinct j from data_karama j where j.numero_affiliation =:numaf and j.cin =:cin and j.type_contrat=:typavg")
+    data_karama findbynumaff(@Param("numaf") String numaf, @Param("cin") String cin,@Param("cin") String typavg);
 
 
     @Query(value = "select  j from data_karama j where j.bur_cod=:burcod and j.numero_affiliation=:numero_affiliation and j.cin =:cin")
