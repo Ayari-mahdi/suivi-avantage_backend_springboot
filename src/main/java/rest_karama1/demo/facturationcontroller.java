@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class facturationcontroller {
     @Autowired
     private repository10 repository10;
-
     @GetMapping("/facturation")
     public List<facturation> fact(){
         return repository10.findAll();
     }
 
     @GetMapping("/facturation/{numemp}")
-    public facturation searchfact(@PathVariable long numemp){
-        return repository10.search(numemp).orElseThrow(()-> new ResourceNotFoundException("facturation for employer not found"));
+    public Optional<List<facturation>> searchfact(@PathVariable long numemp){
+        return  repository10.search(numemp);
     }
 
 

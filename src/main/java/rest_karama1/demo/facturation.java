@@ -1,62 +1,72 @@
 package rest_karama1.demo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(facturationID.class)
 @Table(name="karama384")
 
 public class facturation {
+    @Id
     @Column(name="kar_numemp")
-    private long kar_numemp;
+    private Long kar_numemp;
     @Column(name="kar_matfisc")
     private String kar_matfisc;
     @Column(name = "kar_raissos")
     private String Kar_raissos;
     @Column(name = "kar_adr")
     private String Kar_adr;
+    @Id
     @Column(name="kar_matass")
-    private long kar_matass;
+    private Long kar_matass;
+    @Id
     @Column(name = "kar_cin")
     private String Kar_cin;
+    @Id
     @Column(name = "kar_nomsal")
     private String kar_nomsal;
+    @Id
     @Column(name = "kar_prenomsal")
     private String kar_prenomsal;
     @Column(name = "kar_anncontrat")
-    private long kar_anncontrat;
+    private Long kar_anncontrat;
     @Column(name = "kar_datdeb")
     private LocalDate kar_datdeb;
     @Column(name = "kar_datefin")
     private LocalDate kar_datfin;
     @Column(name = "kar_dtreelprscnss")
     private LocalDate kar_dtreelprscnss;
+    @Id
     @Column(name = "kar_ann")
-    private long kar_ann;
+    private Long kar_ann;
+    @Id
     @Column(name = "kar_trim")
-    private long kar_trim;
+    private Long kar_trim;
     @Column(name = "car_saldec")
-    private long car_saldec;
+    private Long car_saldec;
     @Column(name = "kar_prsmntemp")
-    private long kar_prsmntemp;
+    private Long kar_prsmntemp;
     @Column(name = "kar_prsmntsal")
-    private long kar_prsmntsal;
+    private Long kar_prsmntsal;
     @Column(name = "kar_mnttotprs")
-    private long kar_mnttotprs;
+    private Long kar_mnttotprs;
     @Column(name = "kar_situation")
     private String kar_situation;
     @Column(name = "kar_debittotemp")
-    private long kar_debittotemp;
+    private Long kar_debittotemp;
     @Column(name = "kar_codexp")
-    private long kar_codexp;
+    private Long kar_codexp;
 
-    public long getKar_numemp() {
+
+
+
+
+    public Long getKar_numemp() {
         return kar_numemp;
     }
 
-    public void setKar_numemp(long kar_numemp) {
+    public void setKar_numemp(Long kar_numemp) {
         this.kar_numemp = kar_numemp;
     }
 
@@ -84,11 +94,11 @@ public class facturation {
         Kar_adr = kar_adr;
     }
 
-    public long getKar_matass() {
+    public Long getKar_matass() {
         return kar_matass;
     }
 
-    public void setKar_matass(long kar_matass) {
+    public void setKar_matass(Long kar_matass) {
         this.kar_matass = kar_matass;
     }
 
@@ -116,11 +126,11 @@ public class facturation {
         this.kar_prenomsal = kar_prenomsal;
     }
 
-    public long getKar_anncontrat() {
+    public Long getKar_anncontrat() {
         return kar_anncontrat;
     }
 
-    public void setKar_anncontrat(long kar_anncontrat) {
+    public void setKar_anncontrat(Long kar_anncontrat) {
         this.kar_anncontrat = kar_anncontrat;
     }
 
@@ -148,51 +158,51 @@ public class facturation {
         this.kar_dtreelprscnss = kar_dtreelprscnss;
     }
 
-    public long getKar_ann() {
+    public Long getKar_ann() {
         return kar_ann;
     }
 
-    public void setKar_ann(long kar_ann) {
+    public void setKar_ann(Long kar_ann) {
         this.kar_ann = kar_ann;
     }
 
-    public long getKar_trim() {
+    public Long getKar_trim() {
         return kar_trim;
     }
 
-    public void setKar_trim(long kar_trim) {
+    public void setKar_trim(Long kar_trim) {
         this.kar_trim = kar_trim;
     }
 
-    public long getCar_saldec() {
+    public Long getCar_saldec() {
         return car_saldec;
     }
 
-    public void setCar_saldec(long car_saldec) {
+    public void setCar_saldec(Long car_saldec) {
         this.car_saldec = car_saldec;
     }
 
-    public long getKar_prsmntemp() {
+    public Long getKar_prsmntemp() {
         return kar_prsmntemp;
     }
 
-    public void setKar_prsmntemp(long kar_prsmntemp) {
+    public void setKar_prsmntemp(Long kar_prsmntemp) {
         this.kar_prsmntemp = kar_prsmntemp;
     }
 
-    public long getKar_prsmntsal() {
+    public Long getKar_prsmntsal() {
         return kar_prsmntsal;
     }
 
-    public void setKar_prsmntsal(long kar_prsmntsal) {
+    public void setKar_prsmntsal(Long kar_prsmntsal) {
         this.kar_prsmntsal = kar_prsmntsal;
     }
 
-    public long getKar_mnttotprs() {
+    public Long getKar_mnttotprs() {
         return kar_mnttotprs;
     }
 
-    public void setKar_mnttotprs(long kar_mnttotprs) {
+    public void setKar_mnttotprs(Long kar_mnttotprs) {
         this.kar_mnttotprs = kar_mnttotprs;
     }
 
@@ -204,19 +214,19 @@ public class facturation {
         this.kar_situation = kar_situation;
     }
 
-    public long getKar_debittotemp() {
+    public Long getKar_debittotemp() {
         return kar_debittotemp;
     }
 
-    public void setKar_debittotemp(long kar_debittotemp) {
+    public void setKar_debittotemp(Long kar_debittotemp) {
         this.kar_debittotemp = kar_debittotemp;
     }
 
-    public long getKar_codexp() {
+    public Long getKar_codexp() {
         return kar_codexp;
     }
 
-    public void setKar_codexp(long kar_codexp) {
+    public void setKar_codexp(Long kar_codexp) {
         this.kar_codexp = kar_codexp;
     }
 }

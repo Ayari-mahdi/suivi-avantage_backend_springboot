@@ -5,8 +5,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import rest_karama1.demo.Spring_Security_Jwt.JwtUtil;
+import rest_karama1.demo.Spring_Security_Jwt.authenticationrequest;
+import rest_karama1.demo.Spring_Security_Jwt.authenticationresponse;
+import rest_karama1.demo.Spring_Security_Jwt.myUserDetailsService;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -51,6 +59,32 @@ public class datacontroller {
 
     @Autowired
     private repository9 repository9;
+
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private myUserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
+
+    @RequestMapping(value = "/authenticate",method =RequestMethod.POST)
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody authenticationrequest authenticationrequest) throws Exception{
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationrequest.getUsername(),authenticationrequest.getPassword())
+            );
+        }catch (BadCredentialsException e){
+            throw new Exception("incorrect username and password",e);
+        }
+        final UserDetails userDetails = userDetailsService
+                .loadUserByUsername(authenticationrequest.getUsername());
+
+        final String jwt = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new authenticationresponse(jwt));
+    }
 
     //*********************************************************************************************
    @GetMapping ("/get_avn")
@@ -534,7 +568,13 @@ public class datacontroller {
 
            j.setNumero_affiliation(st1+st2);
        }
-       else {
+       else if (numaffiliation.length()==0)
+       {
+           j.setNumero_affiliation("empty");
+           j.setEmp_exist(2L);
+           j.setAss_exist(2L);
+       }
+       else{
            j.setNumero_affiliation(numaffiliation);
            j.setEmp_exist(2L);
            j.setAss_exist(2L);

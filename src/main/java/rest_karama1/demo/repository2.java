@@ -24,6 +24,4 @@ public interface repository2 extends JpaRepository<dossieravantage, Serializable
     Optional<dossieravantage> search(@Param("x1")long x1 , @Param("x2")long x2);
 
 
-
-
 }

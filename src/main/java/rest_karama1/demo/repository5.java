@@ -11,5 +11,4 @@ import java.util.Optional;
 public interface repository5 extends JpaRepository<beneficiaire, Long> {
     @Query(value = "select b from beneficiaire b where b.ben_numid=:cin and b.ben_typid=0" )
     List<Optional<beneficiaire>> search_ben(@Param("cin") String cin);
-
 }
