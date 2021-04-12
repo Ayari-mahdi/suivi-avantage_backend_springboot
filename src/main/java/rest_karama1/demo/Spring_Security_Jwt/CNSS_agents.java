@@ -3,17 +3,17 @@ package rest_karama1.demo.Spring_Security_Jwt;
 import javax.persistence.*;
 
 @Entity
-@Table(name ="CNSS_agents")
+@Table(name ="TEST_CNSS_agents")
 public class CNSS_agents {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name ="id")
     private long id;
     private String userName;
     private String password;
     private String roles;
-    private boolean active;
+    private Long active;
 
 
     public long getId() {
@@ -48,11 +48,11 @@ public class CNSS_agents {
         this.roles = roles;
     }
 
-    public boolean isActive() {
+    public Long isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Long active) {
         this.active = active;
     }
 }
