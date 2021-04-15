@@ -15,15 +15,17 @@ import java.util.Optional;
 public class facturationcontroller {
     @Autowired
     private repository10 repository10;
+    //********************************************************************************************* GET LIST OF INVOICES
     @GetMapping("/facturation")
     public List<facturation> fact(){
         return repository10.findAll();
     }
-
+    //********************************************************************************************* GET LIST OF INVOICES BY EMPLOYER
     @GetMapping("/facturation/{numemp}")
     public Optional<List<facturation>> searchfact(@PathVariable long numemp){
         return  repository10.search(numemp);
     }
-
-
+    //********************************************************************************************* API TO GIVE TO ANETI BY DATE
+    //********************************************************************************************* API TO GIVE TO ANETI BY DATE
+    //********************************************************************************************* API TO GIVE TO ANETI BY DATE
 }

@@ -11,11 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import rest_karama1.demo.Spring_Security_Jwt.JwtUtil;
-import rest_karama1.demo.Spring_Security_Jwt.authenticationrequest;
-import rest_karama1.demo.Spring_Security_Jwt.authenticationresponse;
-import rest_karama1.demo.Spring_Security_Jwt.myUserDetailsService;
-
+import rest_karama1.demo.Spring_Security_Jwt.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +61,12 @@ public class datacontroller {
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private CNSS_agents_repo agents_repo;
+
+    @Autowired
+    private agents_roles_repo agents_roles_repo;
+
+    @Autowired
     private myUserDetailsService userDetailsService;
 
     @Autowired
@@ -86,13 +88,48 @@ public class datacontroller {
         return ResponseEntity.ok(new authenticationresponse(jwt));
     }
 
-    //*********************************************************************************************
+    //********************************************************************************************* REGISTRATION
+     @PostMapping("/registration")
+    public void addagent(@RequestBody CNSS_agents CNSS_agents){
+
+           if (agents_repo.findByUserName(CNSS_agents.getUsername()).isEmpty()) {
+               CNSS_agents user = new CNSS_agents();
+               user.setUsername(CNSS_agents.getUsername());
+               user.setPassword(CNSS_agents.getPassword());
+               user.setRoles(CNSS_agents.getRoles());
+               agents_repo.saveAndFlush(user);
+           }
+           else {
+           throw new ResourceNotFoundException("User name exist");
+           }
+     }
+    //********************************************************************************************* ADD NEW ANETI ADVANTAGE
+    @PostMapping("/add-aneti-avg")
+    public void addadvantge(@RequestBody aneti_avg aneti_avg){
+
+        aneti_avg newavantage = new aneti_avg();
+        newavantage.setAvn_codav(aneti_avg.getAvn_codav());
+        newavantage.setCode(aneti_avg.getCode());
+        newavantage.setLib(aneti_avg.getLib());
+        repository8.saveAndFlush(newavantage);
+    }
+
+    //********************************************************************************************* ADD NEW ROLE
+    @PostMapping("/add-role")
+    public void addadvantge(@RequestBody agents_roles agents_role){
+
+        agents_roles newrole = new agents_roles();
+        newrole.setRolename(agents_role.getRolename());
+        newrole.setRolecode(agents_role.getRolecode());
+        agents_roles_repo.saveAndFlush(newrole);
+    }
+    //********************************************************************************************* GET EMPLOYERS ADVANTAGES FILES
    @GetMapping ("/get_avn")
    public List<dossieravantage> get_avn(){
       return repository2.findAll();
 
    }
-    //*********************************************************************************************
+    //********************************************************************************************* CREATE FILES FOR ALL DATA
    @PostMapping(value = {"/post_avn/{numaff1}/{cin}/{typavg}","/post_avn"})
    public void WS_aneti(@PathVariable(required = false)String numaff1,@PathVariable(required = false)String cin,@PathVariable(required = false)String typavg)
            {
@@ -189,6 +226,7 @@ public class datacontroller {
                      Date date1 = null;
                      try {
                          date1 = format.parse(data.getDate_debut());
+
                      } catch (ParseException e) {
                          e.printStackTrace();
                      }
@@ -435,31 +473,32 @@ public class datacontroller {
        //return res ;
    }
 
-   //*********************************************************************************************
+   //********************************************************************************************* GET ALL DATA
    @GetMapping("/get")
     public List<data_karama> get_angular(){
 
        return   repository4.findAll();
    }
 
+    //********************************************************************************************* GET ALL CNSS DESKS
    @GetMapping("/getbrcod")
    public List<bureau> get_bur()
    {
-
        return   repository7.findAll();
    }
+    //********************************************************************************************* GET ALL ANETI ADVANTAGES
    @GetMapping("/getavn")
    public List<aneti_avg> getavgcod(){
 
        return   repository8.findAll();
    }
-
+    //********************************************************************************************* GET IMPORTS TRACES
    @GetMapping("/gethistorique")
    public List<ws_aneti_historique> gethisto(){
 
        return  repository9.findAllByOrderByIdAsc();
    }
-   //*****************************************************
+   //********************************************************************************************** SEARCH IN ALL DATA LIST
    @GetMapping(value={  "/get/{burcod}", "/get/{burcod}/{cin}/{numero_affiliation}"})
    public List<data_karama> recherche
    (@PathVariable long burcod,@PathVariable(required = false)String cin,@PathVariable(required = false)String numero_affiliation)
@@ -486,7 +525,7 @@ public class datacontroller {
 
        return   list;
    }
-    //*********************************************************************************************
+    //*************************************************************************** IMPORT FROM ANETI APIs BY TYPE AND DATE OF  ADVANTAGE
    @PostMapping("/rest_aneti/{dateavantage}/{typeavantage}")
     public void getall(@PathVariable String dateavantage,@PathVariable String typeavantage) throws JsonProcessingException {
        Date input = new Date();

@@ -13,4 +13,7 @@ public interface repository6 extends JpaRepository<doss_avgass, Serializable> {
 
     @Query(value="select d from doss_avgass d where d.emp_mat=:x1 and d.emp_cle=:x2 ")
     List<doss_avgass> search2(@Param("x1")long x1 , @Param("x2")long x2);
+
+    @Query(value="select d from doss_avgass d where d.ass_mat=:x1 and d.ass_cle=:x2 ")
+    doss_avgass searchemployee(@Param("x1")long x1 , @Param("x2")long x2);
 }
