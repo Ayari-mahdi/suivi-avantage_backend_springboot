@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +23,9 @@ public class mobilecontroller {
 
     @Autowired
     private repository6 repository6 ;
+
+    @Autowired
+    private test_payment_repo payment_repo;
     //******************* SEARCH IF EMPLOYER HAVE AN ADVANTAGE FILE *********************
     @GetMapping("/search_employer/{numaffiliation}")
     public dossieravantage searchemployer(@PathVariable String numaffiliation)
@@ -43,12 +49,12 @@ public class mobilecontroller {
 
     //*******************  RETURN LIST OF EMPLOYEE PER EMPLOYER by date year *********************
     @GetMapping("/listemployeesperemployer/{numaffiliation}/{trim}/{year}")
-    public  List<doss_avgass> searchemployeebydate(@PathVariable String numaffiliation,@PathVariable char trim,@PathVariable String year) {
+    public  List<doss_avgass> searchemployeebydate(@PathVariable String numaffiliation, @PathVariable char trim, @PathVariable String year) {
         String y1 = numaffiliation.substring(0, 6);
         String y2 = numaffiliation.substring(7);
         long x1 = Long.parseLong(y1);
         long x2 = Long.parseLong(y2);
-        long Year = Long.parseLong(year);
+        //long Year = Long.parseLong(year);
 
         List<doss_avgass> result=new ArrayList<>() ;
         List<doss_avgass> employeelist = repository6.search2(x1, x2);
@@ -106,20 +112,24 @@ public class mobilecontroller {
                     Date datefin = e.getDaa_dtfin();
                     int c3=  datefin.compareTo(date1);
                     int c4=  datefin.compareTo(date2);
-                    if (c1>0 && c4<0)
+                    if (c1>0 && c2<0)
                     {
+                       result.add(e);
+                   }
+                   else if(c3>0 && c4<0)
+                   {
                         result.add(e);
                     }
-                    else if(c4 >0 && c3<0)
-                    {
-                        result.add(e);
-                    }
-                    else if (c1<0 && c2>0)
+                   else if (c1<0 && c2<0  && c3>0 && c4>0)
                     {
                         result.add(e);
                     }
 
 
+//result.add(c1);
+//result.add(c2);
+//result.add(c3);
+//result.add(c4);
                     //  String debyear = datedeb.toString().substring(0,4);
                     //     long debYear = Long.parseLong(debyear);
                     //     String debmonth = datedeb.toString().substring(5,7);
@@ -148,16 +158,35 @@ public class mobilecontroller {
 
     }
     //*******************  ADD EMPLOYEE SALARY  *********************
-    @PostMapping("/employeeSalary/{numMat}/{numcle}/{salary}")
-    public  void employeeSalary(@PathVariable String numMat,@PathVariable String numcle,@PathVariable Long salary)
-    {
-        long x1 = Long.parseLong(numMat);
-        long x2= Long.parseLong(numcle);
+    @PostMapping("/employeeSalary/{salaire}")
+    public  void employeeSalary(@RequestBody doss_avgass payment,@PathVariable String salaire)
+    {   Date input = new Date();
+        LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        //long x1 = Long.parseLong(numMat);
+        //long x2= Long.parseLong(numcle);
+        //doss_avgass employee =  repository6.searchemployee(x1,x2);
+    //    employee.getDaa_dtdeb();
+        payment newpay = new payment();
+        newpay.setNumemp(payment.getEmp_mat());
+        newpay.setCleemp(payment.getEmp_cle());
+        newpay.setNumass(payment.getAss_mat());
+        newpay.setCleass( payment.getAss_cle());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDate localdate = localDateTime.toLocalDate();
+        newpay.setSalaire(salaire);
+        newpay.setDtsaisisalaire(localdate);
+        payment_repo.saveAndFlush(newpay);
+        //////TEST
+       long x1=payment.getAss_mat();
+        long x2=payment.getAss_cle();
         doss_avgass employee =  repository6.searchemployee(x1,x2);
-     employee.getDaa_dtdeb();
+        long sa =Long.parseLong(salaire);
+        employee.setDaa_salaire(sa);
+        ////////
 
-        employee.setDaa_salaire(salary);
+
     }
+
 
 
 
