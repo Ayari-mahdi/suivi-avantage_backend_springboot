@@ -14,9 +14,36 @@ public class payment {
      private long cleemp;
      private long numass;
      private long cleass;
+     private char trim;
+     private String year;
      private String salaire;
+     private String avg;
      private LocalDate dtsaisisalaire;
      private LocalDate dtpayement;
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
+
+    public char getTrim() {
+        return trim;
+    }
+
+    public void setTrim(char trim) {
+        this.trim = trim;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
 
     public long getId() {
         return id;

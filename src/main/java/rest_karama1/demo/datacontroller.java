@@ -266,8 +266,8 @@ public class datacontroller {
                    long brcod = repository3.brcod(numaf).get();
                    data.setAss_exist(1L);
                    data.setBur_cod(brcod);
-                  beneficiaire ben = repository5.search_ben(data.getCin()).get(0).get();
-                 long v= repository6.search_dossavgass(ben.getAss_mat());
+                beneficiaire ben = repository5.search_ben(data.getCin()).get(0).get();
+                long v= repository6.search_dossavgass(ben.getAss_mat());
                       if (v==0) {
                 doss_avgass davgass = new doss_avgass();
                 davgass.setAss_mat(ben.getAss_mat());
@@ -474,11 +474,7 @@ public class datacontroller {
    }
 
    //********************************************************************************************* GET ALL DATA
-   @GetMapping("/get")
-    public List<data_karama> get_angular(){
 
-       return   repository4.findAll();
-   }
 
     //********************************************************************************************* GET ALL CNSS DESKS
    @GetMapping("/getbrcod")
@@ -496,22 +492,43 @@ public class datacontroller {
    @GetMapping("/gethistorique")
    public List<ws_aneti_historique> gethisto(){
 
-       return  repository9.findAllByOrderByIdAsc();
-   }
-   //********************************************************************************************** SEARCH IN ALL DATA LIST
-   @GetMapping(value={  "/get/{burcod}", "/get/{burcod}/{cin}/{numero_affiliation}"})
-   public List<data_karama> recherche
-   (@PathVariable long burcod,@PathVariable(required = false)String cin,@PathVariable(required = false)String numero_affiliation)
-   {List<data_karama> list = new ArrayList<>();
+        return  repository9.findAllByOrderByIdAsc();
+    }
+//***************************************************************************************************
+    @GetMapping("/get")
+    public List<data_karama> get_angular(){
 
-       if (cin == null && numero_affiliation == null)
+        //repository4.findAll();
+        return    repository4.findbyavg();
+    }
+//**************************************************************************
+    @GetMapping("/getfaulty")
+    public List<data_karama> get_faulty(){
+        return repository4.findfaulty();
+    }
+    //**********************************************
+    @GetMapping("/getnotyetregistered")
+    public List<data_karama> get_notyetregistered(){
+
+        return repository4.findnotyetregistered();
+    }
+   //********************************************************************************************** SEARCH IN ALL DATA LIST
+   @GetMapping(value={  "/get/{typavg}/{burcod}","/get/{typavg}/{burcod}/{cin}"})
+   public List<data_karama> recherche
+   ( @PathVariable(required = false)String typavg ,@PathVariable long burcod,@PathVariable(required = false)String cin)
+   {List<data_karama> list = new ArrayList<>();
+       if (cin == null )
         {
-         list =  repository4.findBy_burcod(burcod);
+         list =  repository4.findBy_burcod(typavg,burcod);
         }
        else
        {
-           list = repository4.findBy_burcod_numaff(burcod,numero_affiliation,cin);
+           list =repository4.findBy_burcod_cin(typavg,burcod,cin);
        }
+     //  else
+    //  {
+        //   list = repository4.findBy_burcod_numaff(burcod,numero_affiliation,cin);
+     //  }
 
      //  else if (numero_affiliation == null)
       // {

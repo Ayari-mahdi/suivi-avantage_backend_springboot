@@ -1,8 +1,8 @@
 package rest_karama1.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import rest_karama1.demo.Spring_Security_Jwt.PayResultList;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,6 +13,9 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
 //*******************************  payment WEB AND MOBILE   *************************
 @RestController
 @CrossOrigin(origins = "*")
@@ -38,16 +41,16 @@ public class mobilecontroller {
     }
     //*******************  RETURN LIST OF EMPLOYEE PER EMPLOYER  *********************
     @GetMapping("/listemployeesperemployer/{numaffiliation}")
-    public  List<doss_avgass> searchemployeesparemployer(@PathVariable String numaffiliation)
+    public List<doss_avgass> searchemployeesparemployer(@PathVariable String numaffiliation)
     {
         String y1=numaffiliation.substring(0,6);
         String y2=numaffiliation.substring(7);
         long x1 = Long.parseLong(y1);
         long x2= Long.parseLong(y2);
-        return repository6.search2(x1,x2);
+        return repository6.search2(x1,x2).orElseThrow(()-> new ResourceNotFoundException("empty list"));
     }
 
-    //*******************  RETURN LIST OF EMPLOYEE PER EMPLOYER by date year *********************
+    //*******************  RETURN LIST OF EMPLOYEE PER EMPLOYER by trim and  year *********************
     @GetMapping("/listemployeesperemployer/{numaffiliation}/{trim}/{year}")
     public  List<doss_avgass> searchemployeebydate(@PathVariable String numaffiliation, @PathVariable char trim, @PathVariable String year) {
         String y1 = numaffiliation.substring(0, 6);
@@ -57,12 +60,13 @@ public class mobilecontroller {
         //long Year = Long.parseLong(year);
 
         List<doss_avgass> result=new ArrayList<>() ;
-        List<doss_avgass> employeelist = repository6.search2(x1, x2);
-        employeelist.forEach((e) -> {
-                    String month1 ="";
-                    String month2="" ;
-                    String day1="01" ;
-                    String day2="" ;
+        Optional<List<doss_avgass>> employeelist = repository6.search2(x1, x2);
+        //employeelist.get().forEach((e)->......
+        employeelist.ifPresent(doss_avgasses -> doss_avgasses.forEach((e) -> {
+                    String month1 = "";
+                    String month2 = "";
+                    String day1 = "01";
+                    String day2 = "";
                     if (trim == '1') {
                         month1 = "01";
                         month2 = "03";
@@ -108,20 +112,15 @@ public class mobilecontroller {
 
                     Date datedeb = e.getDaa_dtdeb();
                     int c1 = datedeb.compareTo(date1);
-                    int c2=  datedeb.compareTo(date2);
+                    int c2 = datedeb.compareTo(date2);
                     Date datefin = e.getDaa_dtfin();
-                    int c3=  datefin.compareTo(date1);
-                    int c4=  datefin.compareTo(date2);
-                    if (c1>0 && c2<0)
-                    {
-                       result.add(e);
-                   }
-                   else if(c3>0 && c4<0)
-                   {
+                    int c3 = datefin.compareTo(date1);
+                    int c4 = datefin.compareTo(date2);
+                    if (c1 > 0 && c2 < 0) {
                         result.add(e);
-                    }
-                   else if (c1<0 && c2<0  && c3>0 && c4>0)
-                    {
+                    } else if (c3 > 0 && c4 < 0) {
+                        result.add(e);
+                    } else if (c1 < 0 && c2 < 0 && c3 > 0 && c4 > 0) {
                         result.add(e);
                     }
 
@@ -152,14 +151,15 @@ public class mobilecontroller {
                     //             }
                     //           }
                 }
-        );
+        ));
 
  return  result;
 
     }
     //*******************  ADD EMPLOYEE SALARY  *********************
-    @PostMapping("/employeeSalary/{salaire}")
-    public  void employeeSalary(@RequestBody doss_avgass payment,@PathVariable String salaire)
+    @PostMapping("/employeeSalary/{salaire}/{trim}/{year}/{avg}")
+    public  void employeeSalary(@RequestBody doss_avgass payment,@PathVariable String salaire,
+                                @PathVariable char trim, @PathVariable String year,@PathVariable String avg )
     {   Date input = new Date();
         LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         //long x1 = Long.parseLong(numMat);
@@ -171,23 +171,75 @@ public class mobilecontroller {
         newpay.setCleemp(payment.getEmp_cle());
         newpay.setNumass(payment.getAss_mat());
         newpay.setCleass( payment.getAss_cle());
+
         LocalDateTime localDateTime = LocalDateTime.now();
         LocalDate localdate = localDateTime.toLocalDate();
         newpay.setSalaire(salaire);
         newpay.setDtsaisisalaire(localdate);
+        newpay.setTrim(trim);
+        newpay.setYear(year);
+        newpay.setAvg(avg);
         payment_repo.saveAndFlush(newpay);
         //////TEST
-       long x1=payment.getAss_mat();
-        long x2=payment.getAss_cle();
-        doss_avgass employee =  repository6.searchemployee(x1,x2);
-        long sa =Long.parseLong(salaire);
-        employee.setDaa_salaire(sa);
+       //long x1=payment.getAss_mat();
+        //long x2=payment.getAss_cle();
+      //  doss_avgass employee =  repository6.searchemployee(x1,x2);
+      //  long sa =Long.parseLong(salaire);
+     //   employee.setDaa_salaire(sa);
         ////////
-
-
     }
 
+    //*******************  Calculate EMPLOYEE SALARIES sum before and after percentage deduction *********************
 
+    @GetMapping("/paymentemployer/{numaffiliation}/{trim}/{year}/{avg}")
+    public  PayResultList searchemployeesbydate(@PathVariable String numaffiliation,
+                                                    @PathVariable char trim, @PathVariable String year,@PathVariable String avg) {
+        String y1 = numaffiliation.substring(0, 6);
+        String y2 = numaffiliation.substring(7);
+        long x1 = Long.parseLong(y1);
+        long x2 = Long.parseLong(y2);
+        //long Year = Long.parseLong(year);
+        Optional<List<payment>> employeelist = payment_repo.searchemp(x1, x2,trim,year,avg);
+        AtomicLong total = new AtomicLong();
+        employeelist.ifPresent(payments ->
+                    payments.forEach((e) -> {
+                                long x = Long.parseLong(e.getSalaire());
+                                total.set(total.get() + x);
+                            }
+                    )
+        );
+
+        PayResultList PrepayResult = new PayResultList();
+        PrepayResult.setTotal(total.longValue());
+
+        if (avg.equalsIgnoreCase("KARAMA"))
+        {   long taux = 50;
+            long t = (50 * total.longValue())/ 100;
+            PrepayResult.setTaux(taux);
+            PrepayResult.setFinalsum(t);
+        }
+        if (avg.equalsIgnoreCase("SCV"))
+        {   long taux = 20;
+            long t = (20 * total.longValue())/ 100;
+            PrepayResult.setTaux(taux);
+            PrepayResult.setFinalsum(t);
+        }
+        if (avg.equalsIgnoreCase("CIVP"))
+        {   long taux = 35;
+            long t = (35 * total.longValue())/ 100;
+            PrepayResult.setTaux(taux);
+            PrepayResult.setFinalsum(t);
+        }
+        if (avg.equalsIgnoreCase("STARTUP-ACT"))
+        {   long taux = 20;
+            long t = (20 * total.longValue())/ 100;
+            PrepayResult.setTaux(taux);
+            PrepayResult.setFinalsum(t);
+        }
+
+        return  PrepayResult;
+
+    }
 
 
 
