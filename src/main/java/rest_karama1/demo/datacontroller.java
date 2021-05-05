@@ -16,6 +16,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -581,11 +582,14 @@ public class datacontroller {
        historique.setAgent(66324L);
        historique.setType_contrat(typeavantage);
        historique.setDate_import(dateavantage);
-       historique.setImport_local(date);
-       long x = repository9.count();
+       LocalDateTime localDateTime = LocalDateTime.now();
+       LocalDate d = localDateTime.toLocalDate();
+       historique.setImport_local(d);
+       //long x = repository9.count();
+       long x = repository9.selectmaxid();
      //  ws_aneti_historique lastone= repository9.search_histo_id(x);
       // long newid = lastone.getId()+1;
-       historique.setId(x);
+       historique.setId(x+1);
        repository9.saveAndFlush(historique);
      //***********************************************************************
 

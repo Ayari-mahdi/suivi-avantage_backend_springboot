@@ -20,12 +20,22 @@ public class ws_aneti_historique {
     private LocalDate import_local;
     @Column(name = "date_import")
     private String date_import;
+    @Column(name = "number")
+    private long number;
     @Column(name = "creation_dossier")
     private  Long creation_dossier;
     @Column(name = "boo_creation_dossier")
     private  Long boo_creation_dossier;
 
     public ws_aneti_historique() {
+    }
+
+    public long getNumber() {
+        return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
     }
 
     public Long getBoo_creation_dossier() {

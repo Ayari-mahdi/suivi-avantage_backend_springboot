@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,5 +13,18 @@ public interface repository9 extends JpaRepository<ws_aneti_historique,String> {
     @Query(value = "select b from ws_aneti_historique b where b.id=:id" )
    ws_aneti_historique search_histo_id(@Param("id") long id);
 
-    public List<ws_aneti_historique> findAllByOrderByIdAsc();
+    @Query(value = "select max(b.id) from ws_aneti_historique b " )
+     long selectmaxid();
+
+    @Query(value = "select b from ws_aneti_historique b where b.id=(select max(b.id) from ws_aneti_historique b where b.type_contrat=:avg) ")
+    ws_aneti_historique selectfirst(@Param("avg")String avg,@Param("d") LocalDate d);
+
+    @Query(value = "select b from ws_aneti_historique b where b.id=(select max(b.id) from ws_aneti_historique b where b.type_contrat=:avg and b.id<:val) ")
+    ws_aneti_historique selectrest(@Param("avg")String avg,@Param("d") LocalDate d,@Param("val") long val);
+
+    @Query(value = "select count(b) from ws_aneti_historique b where b.import_local=:dat" )
+    long countbydate(@Param("dat") LocalDate dat);
+     List<ws_aneti_historique> findAllByOrderByIdAsc();
+
+
 }

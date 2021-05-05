@@ -1,4 +1,4 @@
-package rest_karama1.demo.Spring_Security_Jwt;
+package rest_karama1.demo;
 
 public class PayResultList {
     private long total;

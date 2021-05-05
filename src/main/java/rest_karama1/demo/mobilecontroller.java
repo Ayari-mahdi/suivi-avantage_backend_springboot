@@ -2,7 +2,6 @@ package rest_karama1.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import rest_karama1.demo.Spring_Security_Jwt.PayResultList;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -160,8 +159,8 @@ public class mobilecontroller {
     @PostMapping("/employeeSalary/{salaire}/{trim}/{year}/{avg}")
     public  void employeeSalary(@RequestBody doss_avgass payment,@PathVariable String salaire,
                                 @PathVariable char trim, @PathVariable String year,@PathVariable String avg )
-    {   Date input = new Date();
-        LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    {  // Date input = new Date();
+       // LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         //long x1 = Long.parseLong(numMat);
         //long x2= Long.parseLong(numcle);
         //doss_avgass employee =  repository6.searchemployee(x1,x2);
@@ -179,6 +178,7 @@ public class mobilecontroller {
         newpay.setTrim(trim);
         newpay.setYear(year);
         newpay.setAvg(avg);
+
         payment_repo.saveAndFlush(newpay);
         //////TEST
        //long x1=payment.getAss_mat();
@@ -236,7 +236,6 @@ public class mobilecontroller {
             PrepayResult.setTaux(taux);
             PrepayResult.setFinalsum(t);
         }
-
         return  PrepayResult;
 
     }

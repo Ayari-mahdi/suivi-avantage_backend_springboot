@@ -2,19 +2,25 @@ package rest_karama1.demo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
+@IdClass(paymentID.class)
 @Table(name = "test_payment_table")
 public class payment {
     @Id
-     private long id ;
      private long numemp;
+    @Id
      private long cleemp;
+    @Id
      private long numass;
+    @Id
      private long cleass;
+    @Id
      private char trim;
+    @Id
      private String year;
      private String salaire;
      private String avg;
@@ -45,13 +51,7 @@ public class payment {
         this.year = year;
     }
 
-    public long getId() {
-        return id;
-    }
 
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public long getNumemp() {
         return numemp;

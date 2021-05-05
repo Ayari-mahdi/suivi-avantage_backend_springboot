@@ -38,7 +38,12 @@ public interface repository4 extends JpaRepository<data_karama, Serializable> {
     @Query(value = "select distinct j from data_karama j where j.emp_exist=2 or j.ass_exist=2")
     List<data_karama> findfaulty();
 
-    @Query(value = "select distinct j from data_karama j where j.ass_exist<>1 and j.ass_exist <>2")
+    @Query(value = "select distinct j from data_karama j where j.ass_exist is null")
     List<data_karama> findnotyetregistered();
+
+    @Query(value = " select j from data_karama j where j.type_contrat =:avg ")
+    long count1(@Param("avg") String avg);
+
+
 
 }
