@@ -18,6 +18,7 @@ public class CHARTSController {
 
     @Autowired
     repository9 ws_aneti_historepo;
+
 // ----------------------------------FIRST CHART :PIE CHART--------------------------------
     @GetMapping("/listemployeesperemployer/{numaffiliation}")
     public CHARTSModel_1  actualadvantagepercentage ()

@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +27,9 @@ public class mobilecontroller {
 
     @Autowired
     private test_payment_repo payment_repo;
+
+    @Autowired
+    private Complaintrepo complaintrepo;
     //******************* SEARCH IF EMPLOYER HAVE AN ADVANTAGE FILE *********************
     @GetMapping("/search_employer/{numaffiliation}")
     public dossieravantage searchemployer(@PathVariable String numaffiliation)
@@ -240,6 +242,24 @@ public class mobilecontroller {
 
     }
 
-
+//-----------------------------------add complaints-------------------
+@PostMapping("/addcomplaint")
+public void add_complaint( @RequestBody Complaints complaint)
+{
+    Complaints com = new Complaints();
+    com.setEmail(complaint.getEmail());
+    long x = complaintrepo.selectmaxid();
+    com.setId(x+1);
+    com.setComment(complaint.getComment());
+    com.setTypeofproblem(complaint.getTypeofproblem());
+    com.setName(complaint.getName());
+   complaintrepo.saveAndFlush(com);
+}
+    //-----------------------------------list of complaints-------------------
+    @PostMapping("/addcomplaint")
+    public List<Complaints> list_complaint( )
+    {
+        return complaintrepo.findAll();
+    }
 
 }
