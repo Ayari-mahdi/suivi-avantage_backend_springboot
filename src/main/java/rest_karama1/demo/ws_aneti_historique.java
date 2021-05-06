@@ -20,7 +20,7 @@ public class ws_aneti_historique {
     private LocalDate import_local;
     @Column(name = "date_import")
     private String date_import;
-    @Column(name = "number")
+    @Column(name = "numbertotal")
     private long number;
     @Column(name = "creation_dossier")
     private  Long creation_dossier;

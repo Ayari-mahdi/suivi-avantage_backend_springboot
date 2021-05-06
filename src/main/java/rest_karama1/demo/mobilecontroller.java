@@ -256,7 +256,7 @@ public void add_complaint( @RequestBody Complaints complaint)
    complaintrepo.saveAndFlush(com);
 }
     //-----------------------------------list of complaints-------------------
-    @PostMapping("/addcomplaint")
+    @PostMapping("/listcomplaint")
     public List<Complaints> list_complaint( )
     {
         return complaintrepo.findAll();
