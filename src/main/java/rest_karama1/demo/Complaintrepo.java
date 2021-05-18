@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface Complaintrepo extends JpaRepository<Complaints,String> {
 
-    @Query(value = "select max(b.id) from test_compaints b" )
+    @Query(value = "select max(b.id) from Complaints b" )
     long selectmaxid();
 }

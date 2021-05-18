@@ -21,7 +21,7 @@ public class ws_aneti_historique {
     @Column(name = "date_import")
     private String date_import;
     @Column(name = "numbertotal")
-    private long number;
+    private Long number;
     @Column(name = "creation_dossier")
     private  Long creation_dossier;
     @Column(name = "boo_creation_dossier")
@@ -30,11 +30,11 @@ public class ws_aneti_historique {
     public ws_aneti_historique() {
     }
 
-    public long getNumber() {
+    public Long getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(Long number) {
         this.number = number;
     }
 

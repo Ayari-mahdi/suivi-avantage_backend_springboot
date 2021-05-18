@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public interface repository4 extends JpaRepository<data_karama, Serializable> {
     @Query(value = "select distinct j from data_karama j where j.numero_affiliation =:numaf and j.cin =:cin and j.type_contrat=:typavg")
     data_karama findbynumaff(@Param("numaf") String numaf, @Param("cin") String cin,@Param("cin") String typavg);
 
-    @Query(value = "select  j from data_karama j where j.type_contrat='KARAMA'")
+    @Query(value = "select  j from data_karama j where j.ass_exist=1 and j.emp_exist=1 ")
     List<data_karama> findbyavg();
 
     @Query(value = "select  j from data_karama j where j.bur_cod=:burcod and j.numero_affiliation=:numero_affiliation and j.cin =:cin")
@@ -38,11 +39,14 @@ public interface repository4 extends JpaRepository<data_karama, Serializable> {
     @Query(value = "select distinct j from data_karama j where j.emp_exist=2 or j.ass_exist=2")
     List<data_karama> findfaulty();
 
-    @Query(value = "select distinct j from data_karama j where j.ass_exist is null")
+    @Query(value = "select distinct j from data_karama j where j.ass_exist is null and j.type_contrat='STARTUP-ACT'")
     List<data_karama> findnotyetregistered();
 
     @Query(value = " select count(j) from data_karama j where j.type_contrat =:avg ")
     long count1(@Param("avg") String avg);
+
+    @Query(value = "select count(b) from data_karama b where b.local_date=:dat" )
+    long countbydate(@Param("dat") LocalDate dat);
 
 
 

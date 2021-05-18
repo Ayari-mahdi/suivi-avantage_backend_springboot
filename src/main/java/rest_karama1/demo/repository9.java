@@ -20,10 +20,10 @@ public interface repository9 extends JpaRepository<ws_aneti_historique,String> {
     ws_aneti_historique selectfirst(@Param("avg")String avg);
 
     @Query(value = "select b from ws_aneti_historique b where b.id=(select max(b.id) from ws_aneti_historique b where b.type_contrat=:avg and b.id<:val) ")
-    ws_aneti_historique selectrest(@Param("avg")String avg,@Param("val") long val);
+     Optional<ws_aneti_historique> selectrest(@Param("avg")String avg,@Param("val") long val);
 
-    @Query(value = "select count(b) from ws_aneti_historique b where b.import_local=:dat" )
-    long countbydate(@Param("dat") LocalDate dat);
+
+
      List<ws_aneti_historique> findAllByOrderByIdAsc();
 
 

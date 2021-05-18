@@ -1,16 +1,25 @@
 package rest_karama1.demo;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity (name = "test_compaints")
+@Entity
+@Table(name ="testcomplaints")
 public class Complaints {
     @Id
+    @Column(name = "id")
     private long id;
+    @Column(name = "empname")
     private String name;
+    @Column(name = "empemail")
     private String email;
+    @Column(name = "typeofproblem")
     private String typeofproblem;
+    @Column(name = "commentproblem")
     private String comment;
+
 
     public long getId() {
         return id;

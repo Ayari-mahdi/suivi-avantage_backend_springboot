@@ -4,7 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -72,6 +76,8 @@ public class datacontroller {
 
     @Autowired
     private JwtUtil jwtTokenUtil;
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @RequestMapping(value = "/authenticate",method =RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody authenticationrequest authenticationrequest) throws Exception{
@@ -502,12 +508,23 @@ public class datacontroller {
         //repository4.findAll();
         return    repository4.findbyavg();
     }
-//**************************************************************************
+//************************************************************************** send email
     @GetMapping("/getfaulty")
     public List<data_karama> get_faulty(){
+
+        System.out.println("sending email");
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("ayarii.mahdii@gmail.com");
+        simpleMailMessage.setTo("yasmine.bechiekh@gmail.com");
+        simpleMailMessage.setSubject("test from spring boot ");
+        simpleMailMessage.setText("hi there  ");
+        javaMailSender.send(simpleMailMessage);
+        System.out.println("email sent");
         return repository4.findfaulty();
     }
     //**********************************************
+
+    //***********************
     @GetMapping("/getnotyetregistered")
     public List<data_karama> get_notyetregistered(){
 

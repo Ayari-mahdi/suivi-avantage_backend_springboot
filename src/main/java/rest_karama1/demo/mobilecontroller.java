@@ -48,7 +48,10 @@ public class mobilecontroller {
         String y2=numaffiliation.substring(7);
         long x1 = Long.parseLong(y1);
         long x2= Long.parseLong(y2);
-        return repository6.search2(x1,x2).orElseThrow(()-> new ResourceNotFoundException("empty list"));
+        if( repository6.search2(x1,x2).isEmpty()) {
+            throw new ResourceNotFoundException("empty list");
+        }
+        return repository6.search2(x1,x2);
     }
 
     //*******************  RETURN LIST OF EMPLOYEE PER EMPLOYER by trim and  year *********************
@@ -61,8 +64,12 @@ public class mobilecontroller {
         //long Year = Long.parseLong(year);
 
         List<doss_avgass> result=new ArrayList<>() ;
-        Optional<List<doss_avgass>> employeelist = repository6.search2(x1, x2);
-        //employeelist.get().forEach((e)->......
+        Optional<List<doss_avgass>> employeelist = repository6.search3(x1, x2);
+        //employeelist.get().forEach((e)->.....
+        if (employeelist.isPresent())
+        {
+            throw new ResourceNotFoundException("empty list "+trim+"/"+year);
+        }
         employeelist.ifPresent(doss_avgasses -> doss_avgasses.forEach((e) -> {
                     String month1 = "";
                     String month2 = "";

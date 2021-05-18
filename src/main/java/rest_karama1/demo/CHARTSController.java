@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -52,44 +53,60 @@ public class CHARTSController {
         //  if (d.getMonthValue()>=4)
         //  {
           ws_aneti_historique l=  ws_aneti_historepo.selectfirst("KARAMA");
-          l.setNumber(ws_aneti_historepo.countbydate(l.getImport_local()));
+
+          l.setNumber(Anetidata_repo.countbydate(l.getImport_local()));
           list.add(l);
-          ws_aneti_historique l2=  ws_aneti_historepo.selectrest("KARAMA",l.getId());
-        l2.setNumber(ws_aneti_historepo.countbydate(l2.getImport_local()));
-          list.add(l2);
-          ws_aneti_historique l3=  ws_aneti_historepo.selectrest("KARAMA",l2.getId());
-        l3.setNumber(ws_aneti_historepo.countbydate(l3.getImport_local()));
-          list.add(l3);
+         Optional<ws_aneti_historique> l2=  ws_aneti_historepo.selectrest("KARAMA",l.getId());
+         if (l2.isPresent()){
+             l2.get().setNumber(Anetidata_repo.countbydate(l2.get().getImport_local()));
+             list.add(l2.get());
+             Optional<ws_aneti_historique>  l3=  ws_aneti_historepo.selectrest("KARAMA",l2.get().getId());
+             if (l3.isPresent()) {
+                 l3.get().setNumber(Anetidata_repo.countbydate(l3.get().getImport_local()));
+                 list.add(l3.get());
+             }
+         }
+
 
         ws_aneti_historique l4=  ws_aneti_historepo.selectfirst("CIVP");
-        l4.setNumber(ws_aneti_historepo.countbydate(l4.getImport_local()));
+        l4.setNumber(Anetidata_repo.countbydate(l4.getImport_local()));
         list.add(l4);
-        ws_aneti_historique l5=  ws_aneti_historepo.selectrest("CIVP",l4.getId());
-        l5.setNumber(ws_aneti_historepo.countbydate(l5.getImport_local()));
-        list.add(l5);
-        ws_aneti_historique l6=  ws_aneti_historepo.selectrest("CIVP",l5.getId());
-        l6.setNumber(ws_aneti_historepo.countbydate(l6.getImport_local()));
-        list.add(l6);
-
+        Optional<ws_aneti_historique>   l5=  ws_aneti_historepo.selectrest("CIVP",l4.getId());
+        if (l5.isPresent()) {
+            l5.get().setNumber(Anetidata_repo.countbydate(l5.get().getImport_local()));
+            list.add(l5.get());
+            Optional<ws_aneti_historique> l6 = ws_aneti_historepo.selectrest("CIVP", l5.get().getId());
+            if (l6.isPresent()) {
+                l6.get().setNumber(Anetidata_repo.countbydate(l6.get().getImport_local()));
+                list.add(l6.get());
+            }
+        }
         ws_aneti_historique l7=  ws_aneti_historepo.selectfirst("SCV");
-        l7.setNumber(ws_aneti_historepo.countbydate(l7.getImport_local()));
+        l7.setNumber(Anetidata_repo.countbydate(l7.getImport_local()));
         list.add(l7);
-        ws_aneti_historique l8=  ws_aneti_historepo.selectrest("SCV",l7.getId());
-        l8.setNumber(ws_aneti_historepo.countbydate(l8.getImport_local()));
-        list.add(l8);
-        ws_aneti_historique l9=  ws_aneti_historepo.selectrest("SCV",l8.getId());
-        l9.setNumber(ws_aneti_historepo.countbydate(l9.getImport_local()));
-        list.add(l9);
-
+        Optional<ws_aneti_historique> l8=  ws_aneti_historepo.selectrest("SCV",l7.getId());
+        if (l8.isPresent()) {
+            l8.get().setNumber(Anetidata_repo.countbydate(l8.get().getImport_local()));
+            list.add(l8.get());
+            Optional<ws_aneti_historique> l9 = ws_aneti_historepo.selectrest("SCV", l8.get().getId());
+            if (l9.isPresent()) {
+                l9.get().setNumber(Anetidata_repo.countbydate(l9.get().getImport_local()));
+                list.add(l9.get());
+            }
+        }
         ws_aneti_historique l10=  ws_aneti_historepo.selectfirst("STARTUP-ACT");
-        l10.setNumber(ws_aneti_historepo.countbydate(l10.getImport_local()));
+        l10.setNumber(Anetidata_repo.countbydate(l10.getImport_local()));
         list.add(l10);
-        ws_aneti_historique l11=  ws_aneti_historepo.selectrest("STARTUP-ACT",l10.getId());
-        l11.setNumber(ws_aneti_historepo.countbydate(l11.getImport_local()));
-        list.add(l11);
-        ws_aneti_historique l12=  ws_aneti_historepo.selectrest("STARTUP-ACT",l11.getId());
-        l12.setNumber(ws_aneti_historepo.countbydate(l12.getImport_local()));
-        list.add(l12);
+        Optional<ws_aneti_historique> l11=  ws_aneti_historepo.selectrest("STARTUP-ACT",l10.getId());
+        if (l11.isPresent()) {
+        l11.get().setNumber(Anetidata_repo.countbydate(l11.get().getImport_local()));
+        list.add(l11.get());
+        Optional<ws_aneti_historique> l12 = ws_aneti_historepo.selectrest("STARTUP-ACT", l11.get().getId());
+        if (l12.isPresent()) {
+            l12.get().setNumber(Anetidata_repo.countbydate(l12.get().getImport_local()));
+            list.add(l12.get());
+        }
+    }
          // }
      //   if (d.getMonthValue()<4)
      //    {
@@ -98,8 +115,24 @@ public class CHARTSController {
         // repository6.search2(x1,x2).orElseThrow(()-> new ResourceNotFoundException("empty list"));
         return list ;
     }
+//----------TEST CHART1--------
+    @GetMapping("/charttest")
+    public CHARTSModel_1  tesstchart1 ()
+    {
 
+        long x1= (250 * 100)/ 1000;
+        long x2 =(400 * 100)/1000;
+        long x3= (200 * 100)/ 1000 ;
+        long x4= (150* 100)/1000;
+        CHARTSModel_1 ch = new CHARTSModel_1();
+        ch.setKarpercentage(x1);
+        ch.setCivppercentage(x2);
+        ch.setScvpercentage(x3);
+        ch.setStartuppercentage(x4);
 
+        // repository6.search2(x1,x2).orElseThrow(()-> new ResourceNotFoundException("empty list"));
+        return ch ;
+    }
 
 
 }
