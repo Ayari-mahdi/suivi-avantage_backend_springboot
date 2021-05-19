@@ -45,9 +45,20 @@ public interface repository4 extends JpaRepository<data_karama, Serializable> {
     @Query(value = " select count(j) from data_karama j where j.type_contrat =:avg ")
     long count1(@Param("avg") String avg);
 
+    @Query(value = " select count(j) from data_karama j where  j.ass_exist=1 ")
+    long count2();
+    @Query(value = " select count(j) from data_karama j where j.ass_exist is null ")
+    long count21();
+    @Query(value = " select count(j) from data_karama j where j.emp_exist=2 or j.ass_exist=2 ")
+    long count22();
+
+    @Query(value = " select count(j) from data_karama j where j.type_contrat =:avg and j.genre=:genre")
+    long countsex(@Param("avg") String avg,@Param("genre") String genre);
     @Query(value = "select count(b) from data_karama b where b.local_date=:dat" )
     long countbydate(@Param("dat") LocalDate dat);
 
+    @Query(value = "select count(b) from data_karama b where b.type_contrat=:avg and b.local_date<=:dat2" )
+    long countbetweendate(@Param("avg") String avg,@Param("dat2") LocalDate dat2);
 
 
 }

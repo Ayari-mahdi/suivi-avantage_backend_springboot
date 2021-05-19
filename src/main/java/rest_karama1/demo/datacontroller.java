@@ -79,6 +79,8 @@ public class datacontroller {
     @Autowired
     private JavaMailSender javaMailSender;
 
+
+
     @RequestMapping(value = "/authenticate",method =RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody authenticationrequest authenticationrequest) throws Exception{
         try{
@@ -511,7 +513,6 @@ public class datacontroller {
 //************************************************************************** send email
     @GetMapping("/getfaulty")
     public List<data_karama> get_faulty(){
-
         System.out.println("sending email");
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("ayarii.mahdii@gmail.com");
@@ -530,6 +531,8 @@ public class datacontroller {
 
         return repository4.findnotyetregistered();
     }
+    //*************
+
    //********************************************************************************************** SEARCH IN ALL DATA LIST
    @GetMapping(value={  "/get/{typavg}/{burcod}","/get/{typavg}/{burcod}/{cin}"})
    public List<data_karama> recherche
@@ -564,8 +567,11 @@ public class datacontroller {
    @PostMapping("/rest_aneti/{dateavantage}/{typeavantage}")
     public void getall(@PathVariable String dateavantage,@PathVariable String typeavantage) throws JsonProcessingException {
        Date input = new Date();
-       LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
+      // LocalDate date = input.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+       ///
+       LocalDateTime localDateTime = LocalDateTime.now();
+       LocalDate date = localDateTime.toLocalDate();
+       ///
        final long[] id_list_regelement = {0};
        //String url = "http://localhost:8080/api";
        String url ="http://10.222.6.3/CNSS/beneficiaire_dt.php?date="+ dateavantage+"&programme="+typeavantage;
@@ -599,7 +605,7 @@ public class datacontroller {
        historique.setAgent(66324L);
        historique.setType_contrat(typeavantage);
        historique.setDate_import(dateavantage);
-       LocalDateTime localDateTime = LocalDateTime.now();
+
        LocalDate d = localDateTime.toLocalDate();
        historique.setImport_local(d);
        //long x = repository9.count();
