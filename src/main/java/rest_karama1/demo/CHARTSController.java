@@ -193,10 +193,10 @@ public class CHARTSController {
         long scv1= Anetidata_repo.countsex("SCV","MASCULIN");
         long startup1= Anetidata_repo.countsex("STARTUP-ACT","MASCULIN");
 
-        long kar2=  Anetidata_repo.countsex("KARAMA","FEMININE");
-        long civp2= Anetidata_repo.countsex("CIVP","FEMININE");
-        long scv2= Anetidata_repo.countsex("SCV","FEMININE");
-        long startup2= Anetidata_repo.countsex("STARTUP-ACT","FEMININE");
+        long kar2=  Anetidata_repo.countsex("KARAMA","FEMININ");
+        long civp2= Anetidata_repo.countsex("CIVP","FEMININ");
+        long scv2= Anetidata_repo.countsex("SCV","FEMININ");
+        long startup2= Anetidata_repo.countsex("STARTUP-ACT","FEMININ");
         CHARTSModel_3 ch = new CHARTSModel_3();
         ch.setKarmale(kar1);
         ch.setKarfemale(kar2);

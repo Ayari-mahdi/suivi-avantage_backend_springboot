@@ -529,7 +529,17 @@ public class datacontroller {
         return repository4.findfaulty();
     }
     //**********************************************
-
+@GetMapping("/sendfaulty")
+public void send_faulty(){
+    System.out.println("sending email");
+    SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    simpleMailMessage.setFrom("ayarii.mahdii@gmail.com");
+    simpleMailMessage.setTo("yasmine.bechiekh@gmail.com");
+    simpleMailMessage.setSubject("test from spring boot ");
+    simpleMailMessage.setText("hi there");
+    javaMailSender.send(simpleMailMessage);
+    System.out.println("email sent");
+}
     //***********************
     @GetMapping("/getnotyetregistered")
     public List<data_karama> get_notyetregistered(){

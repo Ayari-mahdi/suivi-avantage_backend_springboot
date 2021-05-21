@@ -2,9 +2,8 @@ package rest_karama1.demo;
 
 import javax.persistence.*;
 
-
 @Entity
-@Table(name = "aneti_avg")
+@Table(name = "test_aneti_avg")
 public class aneti_avg {
     @Id
     @Column(name = "code")

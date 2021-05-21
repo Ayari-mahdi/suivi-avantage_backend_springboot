@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 @JsonIgnoreProperties
 @Entity
-@Table(name = "data_karama")
+@Table(name = "test_data_karama")
 public class data_karama {
    // @Id
     //@Column(name = "id")
