@@ -162,6 +162,7 @@ public class datacontroller {
            list2.forEach((rows)->{
                rows.setBoo_creation_dossier(1L);
                rows.setCreation_dossier(66324L);
+               rows.setNumber(1L);
            });
 
 
@@ -320,6 +321,10 @@ public class datacontroller {
            }
            //}
          );
+
+           list2.forEach((rows)->{
+               rows.setNumber(0L);
+           });
          }
 
        else
