@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -138,8 +137,13 @@ public class datacontroller {
       return repository2.findAll();
 
    }
+
+
+
+
+
     //********************************************************************************************* CREATE FILES FOR ALL DATA
-   @PostMapping(value = {"/post_avn/{numaff1}/{cin}/{typavg}","/post_avn"})
+   @GetMapping(value = {"/post_avn/{numaff1}/{cin}/{typavg}","/post_avn"})
    public void WS_aneti(@PathVariable(required = false)String numaff1,@PathVariable(required = false)String cin,@PathVariable(required = false)String typavg)
            {
 
@@ -190,7 +194,7 @@ public class datacontroller {
 
              if (h.get() == 0)
              {
-                 //checking if there is an employer has an emp_mat = numaf
+                 //checking if the employer has an emp_mat = numaf
                  boolean boo = repository3.brcod(numaf).isPresent();
                 // if yes create dossieravanatge for this employer
                  if (boo ) {
@@ -261,7 +265,6 @@ public class datacontroller {
                      emp.add(data);
                  }
              }
-
              else {
                  //if employer already have a record then we gonna change emp_exist value to 1
                  data.setEmp_exist(1L);
@@ -272,7 +275,6 @@ public class datacontroller {
            if (!repository5.search_ben(data.getCin()).isEmpty())
            { if ( repository5.search_ben(data.getCin()).get(0).isPresent() && repository3.brcod(numaf).isPresent())
            {
-
                    long brcod = repository3.brcod(numaf).get();
                    data.setAss_exist(1L);
                    data.setBur_cod(brcod);
@@ -314,7 +316,6 @@ public class datacontroller {
                else
                    {
                        ass.add(data);
-
                    }
              //-----------------------------------------------------------------
             }
@@ -329,7 +330,6 @@ public class datacontroller {
 
        else
            {
-
                assert numaff1 != null;
                String v11= numaff1.substring(0,6);
                String v12= numaff1.substring(6);
@@ -344,8 +344,7 @@ public class datacontroller {
                if (h.get() == 0)
                {
                    boolean boo = repository3.brcod(numaf).isPresent();
-                   //resultss.put(bo[0],boo);
-                   // bo[0]++ ;
+
                    if (boo ) {
                        data.setEmp_exist(1L);
                        long brcod = repository3.brcod(numaf).get();
@@ -418,12 +417,9 @@ public class datacontroller {
                    }
                }
                else {
-
                   data.setEmp_exist(1L);
                   data.setBur_cod(repository3.brcod(numaf).get());
                   repository4.saveAndFlush(data);
-
-
                }
                //CREATION DOSSIER AVANTAGE PAR ASS ------------------------------------------
                if (!repository5.search_ben(data.getCin()).isEmpty())
@@ -431,7 +427,6 @@ public class datacontroller {
                {
                    data.setAss_exist(1L);
                    long brcod = repository3.brcod(numaf).get();
-
                    data.setBur_cod(brcod);
                    beneficiaire ben = repository5.search_ben(data.getCin()).get(0).get();
                    long v= repository6.search_dossavgass(ben.getAss_mat());
@@ -518,25 +513,24 @@ public class datacontroller {
 //************************************************************************** send email
     @GetMapping("/getfaulty")
     public List<data_karama> get_faulty(){
-        System.out.println("sending email");
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("ayarii.mahdii@gmail.com");
-        simpleMailMessage.setTo("yasmine.bechiekh@gmail.com");
-        simpleMailMessage.setSubject("test from spring boot ");
-        simpleMailMessage.setText("hi there  ");
-        javaMailSender.send(simpleMailMessage);
-        System.out.println("email sent");
         return repository4.findfaulty();
     }
     //**********************************************
-@GetMapping("/sendfaulty")
-public void send_faulty(){
+@GetMapping("/sendfaulty/{text}")
+public void send_faulty(@PathVariable String text){
+    final String[] emailbody = new String[1];
+     List<data_karama> list = repository4.findfaulty();
+     list.forEach((x)->{
+         emailbody[0] = emailbody[0] +"//"+ x.getCin();
+     });
+
+
     System.out.println("sending email");
     SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
     simpleMailMessage.setFrom("ayarii.mahdii@gmail.com");
     simpleMailMessage.setTo("yasmine.bechiekh@gmail.com");
-    simpleMailMessage.setSubject("test from spring boot ");
-    simpleMailMessage.setText("hi there");
+    simpleMailMessage.setSubject("lite des anomalies");
+    simpleMailMessage.setText(text+":"+emailbody[0]);
     javaMailSender.send(simpleMailMessage);
     System.out.println("email sent");
 }
